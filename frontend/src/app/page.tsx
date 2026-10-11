@@ -17,6 +17,21 @@ import { EventLogsTab } from '../components/tabs/EventLogsTab';
 import { SystemSettingsTab } from '../components/tabs/SystemSettingsTab';
 import { DocumentationTab } from '../components/tabs/DocumentationTab';
 
+const TAB_TITLES: Record<NavTab, string> = {
+  overview: 'Dashboard',
+  doctors: 'Doctors & Staff Directory',
+  assignments: 'Attending Registry',
+  patients: 'Live Patients & Triage',
+  queue: 'Emergency Priority Queue',
+  processes: 'Process Monitor (fork & PIDs)',
+  ipc: 'IPC Inspector (SHM & Semaphores)',
+  race_lab: 'Race Condition Lab',
+  analytics: 'Analytics & Telemetry',
+  logs: 'System Event Logs',
+  settings: 'System Configuration',
+  docs: 'Architecture Documentation',
+};
+
 export default function DashboardPage() {
   const { state, connectionStatus, lastUpdatedTime, refreshState } = useMedSyncWebSocket();
   const [currentTab, setCurrentTab] = useState<NavTab>('overview');
@@ -26,75 +41,82 @@ export default function DashboardPage() {
   const waitingCount = state.patients.filter((p) => p.treatment_status === 0).length;
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#101113] ambient-bg-mesh text-[#F1F2F3] relative">
-      {/* Top Header */}
-      <Header
-        simulationRunning={state.simulation_running}
-        simulationPaused={state.simulation_paused}
-        connectionStatus={connectionStatus}
-        lastUpdated={lastUpdatedTime}
-        onRefresh={refreshState}
-      />
-
-      {/* Main Body with Sidebar + Tab Content */}
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar
-          currentTab={currentTab}
-          onSelectTab={setCurrentTab}
-          collapsed={sidebarCollapsed}
-          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-          criticalCount={criticalCount}
-          waitingCount={waitingCount}
+    <div className="min-h-screen ambient-bg-mesh p-2 sm:p-4 lg:p-6 flex flex-col justify-center relative">
+      {/* Outer Floating Glass Frame (Matches Reference Image UI) */}
+      <div className="glass-outer-shell flex flex-col flex-1 overflow-hidden min-h-[92vh] z-10">
+        {/* Header with Title, Reference Metrics & Profile */}
+        <Header
+          simulationRunning={state.simulation_running}
+          simulationPaused={state.simulation_paused}
+          connectionStatus={connectionStatus}
+          lastUpdated={lastUpdatedTime}
+          onRefresh={refreshState}
+          title={TAB_TITLES[currentTab]}
+          totalPatients={state.patients.length}
+          totalDoctors={state.doctors.length}
+          totalQueue={waitingCount}
         />
 
-        <main className="flex-1 overflow-y-auto p-6 lg:p-8">
-          {currentTab === 'overview' && (
-            <OverviewTab state={state} onNavigateTab={setCurrentTab} />
-          )}
+        {/* Main Body with Sidebar + Tab Content */}
+        <div className="flex flex-1 overflow-hidden">
+          <Sidebar
+            currentTab={currentTab}
+            onSelectTab={setCurrentTab}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+            criticalCount={criticalCount}
+            waitingCount={waitingCount}
+          />
 
-          {currentTab === 'doctors' && (
-            <DoctorsTab
-              state={state}
-              onRefresh={refreshState}
-              onNavigateToAssignments={() => setCurrentTab('assignments')}
-            />
-          )}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-white/20">
+            {currentTab === 'overview' && (
+              <OverviewTab state={state} onNavigateTab={setCurrentTab} />
+            )}
 
-          {currentTab === 'assignments' && (
-            <AssignmentsTab
-              state={state}
-              onRefresh={refreshState}
-            />
-          )}
+            {currentTab === 'doctors' && (
+              <DoctorsTab
+                state={state}
+                onRefresh={refreshState}
+                onNavigateToAssignments={() => setCurrentTab('assignments')}
+              />
+            )}
 
-          {currentTab === 'patients' && (
-            <PatientsTab state={state} onRefresh={refreshState} />
-          )}
+            {currentTab === 'assignments' && (
+              <AssignmentsTab
+                state={state}
+                onRefresh={refreshState}
+              />
+            )}
 
-          {currentTab === 'queue' && (
-            <EmergencyQueueTab state={state} onNavigateTab={setCurrentTab} />
-          )}
+            {currentTab === 'patients' && (
+              <PatientsTab state={state} onRefresh={refreshState} />
+            )}
 
-          {currentTab === 'processes' && (
-            <ProcessMonitorTab state={state} onRefresh={refreshState} />
-          )}
+            {currentTab === 'queue' && (
+              <EmergencyQueueTab state={state} onNavigateTab={setCurrentTab} />
+            )}
 
-          {currentTab === 'ipc' && <IPCInspectorTab state={state} />}
+            {currentTab === 'processes' && (
+              <ProcessMonitorTab state={state} onRefresh={refreshState} />
+            )}
 
-          {currentTab === 'race_lab' && (
-            <RaceConditionLabTab onRefresh={refreshState} />
-          )}
+            {currentTab === 'ipc' && <IPCInspectorTab state={state} />}
 
-          {currentTab === 'analytics' && <AnalyticsTab state={state} />}
+            {currentTab === 'race_lab' && (
+              <RaceConditionLabTab onRefresh={refreshState} />
+            )}
 
-          {currentTab === 'logs' && (
-            <EventLogsTab state={state} onRefresh={refreshState} />
-          )}
+            {currentTab === 'analytics' && <AnalyticsTab state={state} />}
 
-          {currentTab === 'settings' && <SystemSettingsTab />}
+            {currentTab === 'logs' && (
+              <EventLogsTab state={state} onRefresh={refreshState} />
+            )}
 
-          {currentTab === 'docs' && <DocumentationTab />}
-        </main>
+            {currentTab === 'settings' && <SystemSettingsTab />}
+
+            {currentTab === 'docs' && <DocumentationTab />}
+          </main>
+        </div>
       </div>
     </div>
   );

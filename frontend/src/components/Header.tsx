@@ -1,7 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Activity, Play, Pause, Square, RotateCcw, Radio, ShieldCheck } from 'lucide-react';
+import {
+  Activity,
+  Play,
+  Pause,
+  Square,
+  RotateCcw,
+  Radio,
+  Users,
+  Briefcase,
+  ChevronDown,
+  Layers,
+} from 'lucide-react';
 import { startSimulation, stopSimulation, pauseSimulation, resumeSimulation, resetSimulation } from '../lib/api';
 
 interface HeaderProps {
@@ -10,6 +21,10 @@ interface HeaderProps {
   connectionStatus: 'CONNECTED' | 'CONNECTING' | 'DISCONNECTED';
   lastUpdated: Date | null;
   onRefresh: () => void;
+  title?: string;
+  totalPatients?: number;
+  totalDoctors?: number;
+  totalQueue?: number;
 }
 
 export function Header({
@@ -18,6 +33,10 @@ export function Header({
   connectionStatus,
   lastUpdated,
   onRefresh,
+  title = 'Dashboard',
+  totalPatients = 12,
+  totalDoctors = 6,
+  totalQueue = 0,
 }: HeaderProps) {
   const [currentTime, setCurrentTime] = useState<string>('');
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
@@ -79,116 +98,101 @@ export function Header({
   };
 
   return (
-    <header className="sticky top-0 z-30 px-6 py-3 bg-[rgba(38,40,43,0.72)] backdrop-blur-xl border-b border-[rgba(230,233,237,0.15)] shadow-lg shadow-black/30">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-        {/* Left: Brand & Simulation Badge */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-[rgba(211,214,218,0.12)] border border-[rgba(255,255,255,0.22)] flex items-center justify-center text-[#F1F2F3] shadow-inner">
-              <Activity className="h-5 w-5 text-[#F1F2F3]" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold tracking-wider text-lg text-[#F1F2F3] metric-font">
-                  MED<span className="text-[#FFFFFF] underline decoration-[rgba(255,255,255,0.35)] underline-offset-4">SYNC</span>
-                </span>
-                <span className="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-md bg-[rgba(211,214,218,0.08)] border border-[rgba(230,233,237,0.15)] text-[#B7BBC0] mono-font">
-                  IPC KERNEL v4.2
+    <header className="px-6 py-4 border-b border-white/60 bg-white/40 backdrop-blur-xl">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        {/* Left: Section Title & Quick Stat Pills (Matching Reference Image) */}
+        <div className="flex flex-wrap items-center gap-5">
+          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-stone-900 metric-font">
+            {title}
+          </h1>
+
+          {/* Stat Pills from Reference */}
+          <div className="hidden sm:flex items-center gap-3">
+            {/* Pill 1 */}
+            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl bg-white/80 border border-white/90 shadow-xs">
+              <div className="w-7 h-7 rounded-full bg-amber-100/90 text-amber-700 flex items-center justify-center shrink-0">
+                <Users className="w-3.5 h-3.5" />
+              </div>
+              <div className="leading-tight">
+                <span className="text-[10px] text-stone-400 font-medium block">Total Patients</span>
+                <span className="text-xs font-bold text-stone-900 metric-font">
+                  {totalPatients.toLocaleString()}
                 </span>
               </div>
-              <p className="text-xs text-[#858B92]">Inter-Process Hospital Operations Center</p>
             </div>
-          </div>
 
-          <div className="hidden lg:flex items-center gap-2 pl-4 border-l border-[rgba(255,255,255,0.10)]">
-            {/* Status Pill in Translucent Smoked Glass */}
-            {simulationRunning ? (
-              simulationPaused ? (
-                <span className="text-xs px-2.5 py-1 rounded-lg font-medium tracking-wider mono-font flex items-center gap-1.5 bg-[rgba(233,174,88,0.15)] text-[#E9AE58] border border-[rgba(233,174,88,0.30)]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#E9AE58]" />
-                  CLOCK PAUSED
+            {/* Pill 2 */}
+            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl bg-white/80 border border-white/90 shadow-xs">
+              <div className="w-7 h-7 rounded-full bg-orange-100/90 text-orange-700 flex items-center justify-center shrink-0">
+                <Briefcase className="w-3.5 h-3.5" />
+              </div>
+              <div className="leading-tight">
+                <span className="text-[10px] text-stone-400 font-medium block">Total Doctors</span>
+                <span className="text-xs font-bold text-stone-900 metric-font">
+                  {totalDoctors.toLocaleString()}
                 </span>
-              ) : (
-                <span className="text-xs px-2.5 py-1 rounded-lg font-medium tracking-wider mono-font flex items-center gap-1.5 bg-[rgba(211,214,218,0.14)] text-[#F1F2F3] border border-[rgba(255,255,255,0.25)]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#68D391] animate-pulse" />
-                  IPC RUNNING
-                </span>
-              )
-            ) : (
-              <span className="text-xs px-2.5 py-1 rounded-lg font-medium tracking-wider mono-font flex items-center gap-1.5 bg-[rgba(240,93,105,0.12)] text-[#F05D69] border border-[rgba(240,93,105,0.28)]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#F05D69]" />
-                STOPPED
-              </span>
-            )}
+              </div>
+            </div>
 
-            {/* Academic Notice Badge */}
-            <div className="flex items-center gap-1.5 text-[11px] text-[#B7BBC0] bg-[rgba(211,214,218,0.08)] px-2.5 py-1 rounded-lg border border-[rgba(230,233,237,0.12)]">
-              <ShieldCheck className="h-3.5 w-3.5 text-[#B7BBC0]" />
-              <span>OS Systems Lab Mode</span>
+            {/* Pill 3 */}
+            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl bg-white/80 border border-white/90 shadow-xs">
+              <div className="w-7 h-7 rounded-full bg-stone-200/90 text-stone-700 flex items-center justify-center shrink-0">
+                <Layers className="w-3.5 h-3.5" />
+              </div>
+              <div className="leading-tight">
+                <span className="text-[10px] text-stone-400 font-medium block">Emergency Queue</span>
+                <span className="text-xs font-bold text-stone-900 metric-font">
+                  {totalQueue.toLocaleString()}
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Center: Live Clock & WebSocket Status */}
-        <div className="flex items-center gap-3 text-xs">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[rgba(211,214,218,0.08)] border border-[rgba(230,233,237,0.15)] text-[#B7BBC0] mono-font shadow-inner">
-            <span className="text-[10px] text-[#858B92]">CLOCK</span>
-            <span className="text-[#F1F2F3] font-semibold text-xs tracking-wider">{currentTime || '--:--:--'}</span>
-          </div>
-
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[rgba(211,214,218,0.08)] border border-[rgba(230,233,237,0.15)] shadow-inner">
+        {/* Right: Simulation Controls + User Profile Pill (From Reference Image) */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Simulation Status Badge */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/70 border border-white/90 shadow-xs text-xs">
             <Radio
               className={`h-3.5 w-3.5 ${
                 connectionStatus === 'CONNECTED'
-                  ? 'text-[#68D391] animate-pulse'
+                  ? 'text-emerald-600 animate-pulse'
                   : connectionStatus === 'CONNECTING'
-                  ? 'text-[#E9AE58]'
-                  : 'text-[#F05D69]'
+                  ? 'text-amber-500'
+                  : 'text-rose-500'
               }`}
             />
-            <span className="text-[11px] mono-font text-[#B7BBC0]">
-              {connectionStatus === 'CONNECTED'
-                ? 'BRIDGE LIVE'
-                : connectionStatus === 'CONNECTING'
-                ? 'SYNCING...'
-                : 'OFFLINE'}
+            <span className="text-[11px] font-medium text-stone-600">
+              {connectionStatus === 'CONNECTED' ? 'Kernel Live' : 'Connecting...'}
             </span>
-            {lastUpdated && (
-              <span className="text-[10px] text-[#858B92] hidden xl:inline">
-                ({lastUpdated.toLocaleTimeString()})
-              </span>
-            )}
           </div>
-        </div>
 
-        {/* Right: Simulation Controls */}
-        <div className="flex items-center gap-2">
+          {/* Action Buttons */}
           {!simulationRunning ? (
             <button
               onClick={handleStart}
               disabled={loadingAction === 'start'}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(237,239,242,0.18)] hover:bg-[rgba(237,239,242,0.28)] border border-[rgba(255,255,255,0.30)] text-white font-semibold text-xs tracking-wider transition-all shadow-md cursor-pointer disabled:opacity-40"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white font-medium text-xs transition shadow-sm cursor-pointer disabled:opacity-40"
             >
               <Play className="h-3.5 w-3.5 fill-current" />
-              START SIMULATION
+              Start System
             </button>
           ) : (
-            <>
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={handleTogglePause}
                 disabled={loadingAction === 'pause'}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[rgba(211,214,218,0.10)] hover:bg-[rgba(211,214,218,0.18)] text-[#F1F2F3] border border-[rgba(230,233,237,0.18)] text-xs font-medium transition cursor-pointer disabled:opacity-40"
-                title={simulationPaused ? 'Resume Simulation Clock' : 'Pause Simulation Clock'}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/80 hover:bg-white text-stone-700 border border-white/90 text-xs font-medium transition cursor-pointer shadow-xs disabled:opacity-40"
               >
                 {simulationPaused ? (
                   <>
-                    <Play className="h-3.5 w-3.5 fill-current text-[#E9AE58]" />
-                    <span>RESUME</span>
+                    <Play className="h-3 w-3 fill-current text-amber-600" />
+                    <span>Resume</span>
                   </>
                 ) : (
                   <>
-                    <Pause className="h-3.5 w-3.5 fill-current text-[#E9AE58]" />
-                    <span>PAUSE</span>
+                    <Pause className="h-3 w-3 fill-current text-amber-600" />
+                    <span>Pause</span>
                   </>
                 )}
               </button>
@@ -196,23 +200,38 @@ export function Header({
               <button
                 onClick={handleStop}
                 disabled={loadingAction === 'stop'}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[rgba(240,93,105,0.12)] hover:bg-[rgba(240,93,105,0.20)] text-[#F05D69] border border-[rgba(240,93,105,0.28)] text-xs font-medium transition cursor-pointer disabled:opacity-40"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-medium transition cursor-pointer disabled:opacity-40"
               >
-                <Square className="h-3.5 w-3.5 fill-current" />
-                <span>STOP</span>
+                <Square className="h-3 w-3 fill-current" />
+                <span>Stop</span>
               </button>
-            </>
+            </div>
           )}
 
           <button
             onClick={handleReset}
             disabled={loadingAction === 'reset'}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[rgba(211,214,218,0.08)] hover:bg-[rgba(211,214,218,0.15)] text-[#B7BBC0] hover:text-[#F1F2F3] border border-[rgba(230,233,237,0.15)] text-xs font-medium transition cursor-pointer disabled:opacity-40"
-            title="Reset simulation data to default baseline"
+            className="p-2 rounded-full bg-white/80 hover:bg-white text-stone-500 hover:text-stone-800 border border-white/90 transition cursor-pointer shadow-xs"
+            title="Reset Simulation State"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            <span>RESET</span>
           </button>
+
+          {/* Profile Pill (Direct match to reference image top-right: "Carla Sanford") */}
+          <div className="flex items-center gap-2.5 pl-2 pr-3 py-1 rounded-full bg-white/85 border border-white/90 shadow-xs cursor-pointer hover:bg-white transition">
+            <img
+              src="/images/doctors/doctor-ananya-rao.jpg"
+              alt="Carla Sanford"
+              className="w-7 h-7 rounded-full object-cover object-top border border-amber-300"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/images/doctors/doctor-arjun-mehta.jpg';
+              }}
+            />
+            <span className="text-xs font-semibold text-stone-800 tracking-tight">
+              Dr. Carla Sanford
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 text-stone-400" />
+          </div>
         </div>
       </div>
     </header>

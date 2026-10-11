@@ -3,23 +3,14 @@
 import React, { useState, useMemo } from 'react';
 import {
   Search,
-  Filter,
   Stethoscope,
   Building2,
   Award,
   UserCheck,
-  UserX,
-  Eye,
-  Activity,
-  Layers,
-  ArrowRight,
-  UserPlus,
   Grid,
   List,
-  CheckCircle2,
-  Clock,
   ChevronRight,
-  HeartPulse,
+  Users,
 } from 'lucide-react';
 import { Doctor, Patient, SimulationState } from '../../lib/types';
 import { DoctorProfileDrawer } from '../DoctorProfileDrawer';
@@ -63,7 +54,6 @@ export function DoctorsTab({
   // Filtered doctors
   const filteredDoctors = useMemo(() => {
     return doctors.filter((doc) => {
-      // Search
       const search = searchQuery.toLowerCase();
       const matchesSearch =
         doc.name.toLowerCase().includes(search) ||
@@ -72,20 +62,12 @@ export function DoctorsTab({
         (doc.skills && doc.skills.some((s) => s.toLowerCase().includes(search)));
 
       if (!matchesSearch) return false;
-
-      // Department filter
       if (selectedDepartment !== 'ALL' && doc.department !== selectedDepartment) return false;
-
-      // Specialty filter
       if (selectedSpecialty !== 'ALL' && (doc.specialization || doc.specialty) !== selectedSpecialty) return false;
-
-      // Status filter
       if (selectedStatus !== 'ALL') {
         const statusCode = Number(selectedStatus);
         if (doc.status !== statusCode) return false;
       }
-
-      // Assignment status filter
       if (selectedAssignmentFilter === 'ASSIGNED' && doc.current_patient_id <= 0) return false;
       if (selectedAssignmentFilter === 'UNASSIGNED' && doc.current_patient_id > 0) return false;
 
@@ -100,73 +82,73 @@ export function DoctorsTab({
 
   return (
     <div className="space-y-6">
-      {/* Top Banner & KPI Row in Dark Smoke Glass */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-[rgba(38,40,43,0.66)] backdrop-blur-xl border border-[rgba(230,233,237,0.15)] shadow-lg">
+      {/* Top Banner & KPI Row in Warm Frosted Glass */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-3xl bg-white/80 backdrop-blur-xl border border-white/90 shadow-sm">
         <div>
           <div className="flex items-center gap-2.5 mb-1">
-            <div className="p-2 rounded-xl bg-[rgba(211,214,218,0.12)] text-[#F1F2F3] border border-[rgba(255,255,255,0.18)]">
+            <div className="p-2 rounded-2xl bg-amber-100 text-amber-700">
               <Stethoscope className="w-5 h-5" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-[#F1F2F3]">
-              Doctors & Clinical Staff Directory
+            <h1 className="text-xl font-bold tracking-tight text-stone-900 metric-font">
+              Doctors &amp; Clinical Staff Directory
             </h1>
           </div>
-          <p className="text-xs text-[#858B92]">
-            Verified medical personnel profiles, departmental credentials, and active patient assignment registry.
+          <p className="text-xs text-stone-500">
+            Verified physician credentials, departments, and active patient assignment registry.
           </p>
         </div>
 
         {/* Operational Metrics Cards */}
         <div className="flex items-center gap-3">
-          <div className="px-4 py-2.5 rounded-xl bg-[rgba(26,28,30,0.60)] border border-[rgba(230,233,237,0.12)] flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-[#68D391] animate-pulse" />
+          <div className="px-4 py-2 rounded-2xl bg-white border border-stone-200/80 shadow-xs flex items-center gap-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
             <div>
-              <span className="text-[10px] text-[#858B92] block font-mono">AVAILABLE</span>
-              <span className="text-base font-bold text-[#F1F2F3] font-mono">{availableCount} MDs</span>
+              <span className="text-[10px] text-stone-400 block font-medium">AVAILABLE</span>
+              <span className="text-sm font-bold text-stone-900">{availableCount} MDs</span>
             </div>
           </div>
 
-          <div className="px-4 py-2.5 rounded-xl bg-[rgba(26,28,30,0.60)] border border-[rgba(230,233,237,0.12)] flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-[#E2E8F0]" />
+          <div className="px-4 py-2 rounded-2xl bg-white border border-stone-200/80 shadow-xs flex items-center gap-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
             <div>
-              <span className="text-[10px] text-[#858B92] block font-mono">ATTENDING</span>
-              <span className="text-base font-bold text-[#F1F2F3] font-mono">{busyCount} MDs</span>
+              <span className="text-[10px] text-stone-400 block font-medium">ATTENDING</span>
+              <span className="text-sm font-bold text-stone-900">{busyCount} MDs</span>
             </div>
           </div>
 
-          <div className="px-4 py-2.5 rounded-xl bg-[rgba(26,28,30,0.60)] border border-[rgba(230,233,237,0.12)] flex items-center gap-3">
-            <UsersIcon className="w-4 h-4 text-[#858B92]" />
+          <div className="px-4 py-2 rounded-2xl bg-white border border-stone-200/80 shadow-xs flex items-center gap-3">
+            <Users className="w-4 h-4 text-stone-400" />
             <div>
-              <span className="text-[10px] text-[#858B92] block font-mono">TOTAL STAFF</span>
-              <span className="text-base font-bold text-[#F1F2F3] font-mono">{totalCount} MDs</span>
+              <span className="text-[10px] text-stone-400 block font-medium">TOTAL STAFF</span>
+              <span className="text-sm font-bold text-stone-900">{totalCount} MDs</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Filter and Search Bar in Dark Smoke Glass */}
-      <div className="p-4 rounded-2xl bg-[rgba(38,40,43,0.66)] backdrop-blur-xl border border-[rgba(230,233,237,0.15)] shadow-md space-y-3">
+      {/* Filter and Search Bar in Frosted Glass */}
+      <div className="p-4 rounded-3xl bg-white/80 backdrop-blur-xl border border-white/90 shadow-sm space-y-3">
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
           {/* Search Input */}
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-[#858B92] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search by doctor name, specialization, role, or clinical skills..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-[rgba(26,28,30,0.70)] border border-[rgba(230,233,237,0.15)] text-xs text-[#F1F2F3] placeholder-[#858B92] focus:outline-none focus:border-[rgba(255,255,255,0.35)] transition"
+              className="w-full pl-10 pr-4 py-2 rounded-2xl bg-white/90 border border-stone-200/80 text-xs text-stone-900 placeholder-stone-400 focus:outline-none focus:border-amber-500 transition shadow-xs"
             />
           </div>
 
           {/* View mode toggle */}
-          <div className="flex items-center gap-1.5 self-end lg:self-auto bg-[rgba(26,28,30,0.70)] p-1 rounded-xl border border-[rgba(230,233,237,0.12)]">
+          <div className="flex items-center gap-1 self-end lg:self-auto bg-stone-100/80 p-1 rounded-2xl border border-stone-200/60">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-lg text-xs transition cursor-pointer ${
+              className={`p-1.5 rounded-xl text-xs transition cursor-pointer ${
                 viewMode === 'grid'
-                  ? 'bg-[rgba(237,239,242,0.20)] text-white font-semibold border border-[rgba(255,255,255,0.28)]'
-                  : 'text-[#858B92] hover:text-[#F1F2F3]'
+                  ? 'bg-white text-stone-900 font-semibold shadow-xs'
+                  : 'text-stone-400 hover:text-stone-700'
               }`}
               title="Grid Card View"
             >
@@ -174,10 +156,10 @@ export function DoctorsTab({
             </button>
             <button
               onClick={() => setViewMode('table')}
-              className={`p-1.5 rounded-lg text-xs transition cursor-pointer ${
+              className={`p-1.5 rounded-xl text-xs transition cursor-pointer ${
                 viewMode === 'table'
-                  ? 'bg-[rgba(237,239,242,0.20)] text-white font-semibold border border-[rgba(255,255,255,0.28)]'
-                  : 'text-[#858B92] hover:text-[#F1F2F3]'
+                  ? 'bg-white text-stone-900 font-semibold shadow-xs'
+                  : 'text-stone-400 hover:text-stone-700'
               }`}
               title="Table Directory View"
             >
@@ -188,13 +170,12 @@ export function DoctorsTab({
 
         {/* Filter dropdowns */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs">
-          {/* Department */}
           <div>
-            <label className="text-[10px] text-[#858B92] uppercase font-mono block mb-1">Department</label>
+            <label className="text-[10px] text-stone-400 uppercase font-semibold block mb-1">Department</label>
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="w-full bg-[rgba(26,28,30,0.70)] text-[#F1F2F3] border border-[rgba(230,233,237,0.15)] rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-[rgba(255,255,255,0.35)]"
+              className="w-full bg-white text-stone-800 border border-stone-200/80 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-amber-500 shadow-xs"
             >
               <option value="ALL">All Departments</option>
               {departments.map((dept) => (
@@ -205,13 +186,12 @@ export function DoctorsTab({
             </select>
           </div>
 
-          {/* Specialization */}
           <div>
-            <label className="text-[10px] text-[#858B92] uppercase font-mono block mb-1">Specialization</label>
+            <label className="text-[10px] text-stone-400 uppercase font-semibold block mb-1">Specialization</label>
             <select
               value={selectedSpecialty}
               onChange={(e) => setSelectedSpecialty(e.target.value)}
-              className="w-full bg-[rgba(26,28,30,0.70)] text-[#F1F2F3] border border-[rgba(230,233,237,0.15)] rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-[rgba(255,255,255,0.35)]"
+              className="w-full bg-white text-stone-800 border border-stone-200/80 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-amber-500 shadow-xs"
             >
               <option value="ALL">All Specialties</option>
               {specializations.map((spec) => (
@@ -222,13 +202,12 @@ export function DoctorsTab({
             </select>
           </div>
 
-          {/* Availability Status */}
           <div>
-            <label className="text-[10px] text-[#858B92] uppercase font-mono block mb-1">Availability</label>
+            <label className="text-[10px] text-stone-400 uppercase font-semibold block mb-1">Availability</label>
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full bg-[rgba(26,28,30,0.70)] text-[#F1F2F3] border border-[rgba(230,233,237,0.15)] rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-[rgba(255,255,255,0.35)]"
+              className="w-full bg-white text-stone-800 border border-stone-200/80 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-amber-500 shadow-xs"
             >
               <option value="ALL">All Statuses</option>
               <option value="0">Available (Triage Ready)</option>
@@ -238,13 +217,12 @@ export function DoctorsTab({
             </select>
           </div>
 
-          {/* Assignment State */}
           <div>
-            <label className="text-[10px] text-[#858B92] uppercase font-mono block mb-1">Patient Assignment</label>
+            <label className="text-[10px] text-stone-400 uppercase font-semibold block mb-1">Patient Assignment</label>
             <select
               value={selectedAssignmentFilter}
               onChange={(e) => setSelectedAssignmentFilter(e.target.value)}
-              className="w-full bg-[rgba(26,28,30,0.70)] text-[#F1F2F3] border border-[rgba(230,233,237,0.15)] rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-[rgba(255,255,255,0.35)]"
+              className="w-full bg-white text-stone-800 border border-stone-200/80 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-amber-500 shadow-xs"
             >
               <option value="ALL">All Staff</option>
               <option value="ASSIGNED">Currently Attending</option>
@@ -256,8 +234,7 @@ export function DoctorsTab({
 
       {/* Directory Results View */}
       {viewMode === 'grid' ? (
-        /* GRID VIEW OF DOCTORS */
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
           {filteredDoctors.map((doc) => {
             const assignedP = doc.current_patient_id > 0
               ? patients.find((p) => p.id === doc.current_patient_id)
@@ -266,12 +243,12 @@ export function DoctorsTab({
             return (
               <div
                 key={doc.id}
-                className="group rounded-2xl bg-[rgba(38,40,43,0.66)] backdrop-blur-xl border border-[rgba(230,233,237,0.15)] hover:border-[rgba(255,255,255,0.28)] hover:shadow-xl hover:shadow-black/40 transition flex flex-col justify-between overflow-hidden cursor-pointer shadow-md"
+                className="group rounded-3xl bg-white/80 backdrop-blur-xl border border-white/90 hover:border-amber-200 hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer shadow-sm"
                 onClick={() => setSelectedDoctor(doc)}
               >
                 <div>
                   {/* Portrait Header */}
-                  <div className="relative h-44 bg-[#191B1E] overflow-hidden">
+                  <div className="relative h-48 bg-stone-100 overflow-hidden">
                     <img
                       src={doc.image}
                       alt={doc.name}
@@ -280,72 +257,72 @@ export function DoctorsTab({
                         (e.target as HTMLImageElement).src = '/images/doctors/doctor-arjun-mehta.jpg';
                       }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[rgba(26,28,31,0.95)] via-transparent to-black/30" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
                     {/* Status badge in corner */}
                     <div className="absolute top-3 left-3">
                       {doc.status === 0 ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-[rgba(26,28,30,0.80)] backdrop-blur-md text-[#F1F2F3] border border-[rgba(255,255,255,0.20)] shadow-sm">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#68D391] animate-pulse" />
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/90 backdrop-blur-md text-emerald-800 border border-white shadow-xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                           Available
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-[rgba(26,28,30,0.80)] backdrop-blur-md text-[#FFFFFF] border border-[rgba(255,255,255,0.25)] shadow-sm">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#E2E8F0]" />
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/90 backdrop-blur-md text-amber-800 border border-white shadow-xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                           Attending
                         </span>
                       )}
                     </div>
 
-                    {/* ID badge in top right */}
-                    <div className="absolute top-3 right-3 text-[10px] font-mono px-2 py-0.5 rounded-md bg-[rgba(26,28,30,0.80)] backdrop-blur-md text-[#B7BBC0] border border-[rgba(230,233,237,0.15)]">
+                    {/* ID badge */}
+                    <div className="absolute top-3 right-3 text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/85 text-stone-700 font-semibold border border-white shadow-xs">
                       DOC-0{doc.id}
+                    </div>
+
+                    <div className="absolute bottom-3 left-3 right-3 text-white">
+                      <h3 className="text-base font-bold truncate drop-shadow-sm">{doc.name}</h3>
+                      <p className="text-xs text-stone-200 truncate">{doc.role}</p>
                     </div>
                   </div>
 
                   {/* Doctor Profile Body */}
                   <div className="p-4 space-y-3">
-                    <div>
-                      <h3 className="text-base font-bold text-[#F1F2F3] group-hover:text-white transition truncate">
-                        {doc.name}
-                      </h3>
-                      <p className="text-xs text-[#B7BBC0] font-medium truncate">{doc.role}</p>
-                    </div>
-
-                    <div className="space-y-1.5 text-xs text-[#858B92]">
+                    <div className="space-y-1.5 text-xs text-stone-500">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] text-[#858B92]">Specialty</span>
-                        <span className="text-[#F1F2F3] font-medium">{doc.specialization}</span>
+                        <span className="text-[11px]">Specialty</span>
+                        <span className="text-stone-900 font-medium">{doc.specialization}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] text-[#858B92]">Department</span>
-                        <span className="text-[#B7BBC0]">{doc.department}</span>
+                        <span className="text-[11px]">Department</span>
+                        <span className="text-stone-700">{doc.department}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] text-[#858B92]">Experience</span>
-                        <span className="text-[#F1F2F3] font-medium">{doc.experience} years</span>
+                        <span className="text-[11px]">Experience</span>
+                        <span className="text-stone-900 font-medium">{doc.experience} years</span>
                       </div>
                     </div>
 
-                    {/* Assigned Patient Info Chip in Light Smoke Glass */}
-                    <div className="pt-2 border-t border-[rgba(255,255,255,0.08)]">
+                    {/* Assigned Patient Info Chip */}
+                    <div className="pt-2 border-t border-stone-100">
                       {assignedP ? (
-                        <div className="p-2 rounded-xl bg-[rgba(26,28,30,0.60)] border border-[rgba(255,255,255,0.16)] flex items-center justify-between text-xs">
+                        <div className="p-2.5 rounded-2xl bg-amber-50/70 border border-amber-100/80 flex items-center justify-between text-xs">
                           <div className="truncate mr-2">
-                            <span className="text-[10px] text-[#858B92] block font-mono">ATTENDING PATIENT</span>
-                            <span className="font-semibold text-[#F1F2F3] truncate block">{assignedP.name}</span>
+                            <span className="text-[10px] text-amber-700 block font-semibold">ATTENDING PATIENT</span>
+                            <span className="font-semibold text-stone-900 truncate block">{assignedP.name}</span>
                           </div>
                           <span
-                            className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
-                              assignedP.priority === 1 ? 'bg-[rgba(240,93,105,0.20)] text-[#F05D69]' : 'bg-[rgba(233,174,88,0.20)] text-[#E9AE58]'
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
+                              assignedP.priority === 1
+                                ? 'bg-rose-100 text-rose-700'
+                                : 'bg-amber-100 text-amber-700'
                             }`}
                           >
                             P{assignedP.priority}
                           </span>
                         </div>
                       ) : (
-                        <div className="p-2 rounded-xl bg-[rgba(26,28,30,0.40)] border border-dashed border-[rgba(230,233,237,0.12)] text-center text-[11px] text-[#858B92]">
-                          No patient currently assigned
+                        <div className="p-2.5 rounded-2xl bg-stone-50 border border-stone-100 text-center text-[11px] text-stone-400">
+                          Standby for next triage alert
                         </div>
                       )}
                     </div>
@@ -353,18 +330,18 @@ export function DoctorsTab({
                 </div>
 
                 {/* Footer Action */}
-                <div className="px-4 py-3 bg-[rgba(26,28,30,0.50)] border-t border-[rgba(255,255,255,0.08)] flex items-center justify-between text-xs">
-                  <span className="text-[11px] text-[#858B92] font-mono">
-                    Treated: {doc.patients_treated_count} cases
+                <div className="px-4 py-3 bg-stone-50/80 border-t border-stone-100 flex items-center justify-between text-xs">
+                  <span className="text-[11px] text-stone-500 font-mono">
+                    {doc.patients_treated_count} treated
                   </span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       setSelectedDoctor(doc);
                     }}
-                    className="text-xs font-medium text-[#B7BBC0] group-hover:text-white flex items-center gap-1 transition cursor-pointer"
+                    className="text-xs font-semibold text-amber-700 group-hover:text-amber-800 flex items-center gap-1 transition cursor-pointer"
                   >
-                    View Details
+                    View Profile
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -373,22 +350,21 @@ export function DoctorsTab({
           })}
         </div>
       ) : (
-        /* TABLE VIEW OF DOCTORS */
-        <div className="rounded-2xl bg-[rgba(38,40,43,0.66)] backdrop-blur-xl border border-[rgba(230,233,237,0.15)] overflow-hidden shadow-lg">
+        <div className="rounded-3xl bg-white/85 backdrop-blur-xl border border-white/90 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[rgba(26,28,30,0.70)] text-[#858B92] uppercase font-mono text-[10px] border-b border-[rgba(230,233,237,0.15)]">
+              <thead className="bg-stone-50 text-stone-400 uppercase font-semibold text-[10px] border-b border-stone-100">
                 <tr>
-                  <th className="py-3.5 px-4">Doctor</th>
-                  <th className="py-3.5 px-4">Department & Specialty</th>
-                  <th className="py-3.5 px-4">Experience</th>
-                  <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4">Current Patient</th>
-                  <th className="py-3.5 px-4">Cases Treated</th>
-                  <th className="py-3.5 px-4 text-right">Actions</th>
+                  <th className="py-3.5 px-4 font-medium">Doctor</th>
+                  <th className="py-3.5 px-4 font-medium">Department &amp; Specialty</th>
+                  <th className="py-3.5 px-4 font-medium">Experience</th>
+                  <th className="py-3.5 px-4 font-medium">Status</th>
+                  <th className="py-3.5 px-4 font-medium">Current Patient</th>
+                  <th className="py-3.5 px-4 font-medium">Cases Treated</th>
+                  <th className="py-3.5 px-4 text-right font-medium">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[rgba(255,255,255,0.08)]">
+              <tbody className="divide-y divide-stone-100">
                 {filteredDoctors.map((doc) => {
                   const assignedP = doc.current_patient_id > 0
                     ? patients.find((p) => p.id === doc.current_patient_id)
@@ -397,86 +373,79 @@ export function DoctorsTab({
                   return (
                     <tr
                       key={doc.id}
-                      className="hover:bg-[rgba(211,214,218,0.06)] transition cursor-pointer"
+                      className="hover:bg-stone-50/80 transition cursor-pointer"
                       onClick={() => setSelectedDoctor(doc)}
                     >
-                      {/* Doctor info + headshot */}
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <img
                             src={doc.image}
                             alt={doc.name}
-                            className="w-10 h-10 rounded-xl object-cover object-top border border-[rgba(255,255,255,0.18)]"
+                            className="w-10 h-10 rounded-2xl object-cover object-top border border-stone-200"
                             onError={(e) => {
                               (e.target as HTMLImageElement).src = '/images/doctors/doctor-arjun-mehta.jpg';
                             }}
                           />
                           <div>
-                            <span className="font-bold text-[#F1F2F3] block">{doc.name}</span>
-                            <span className="text-[11px] text-[#B7BBC0]">{doc.role}</span>
+                            <span className="font-bold text-stone-800 block">{doc.name}</span>
+                            <span className="text-[11px] text-stone-500">{doc.role}</span>
                           </div>
                         </div>
                       </td>
 
-                      {/* Department & specialty */}
                       <td className="py-3 px-4">
-                        <span className="font-medium text-[#F1F2F3] block">{doc.specialization}</span>
-                        <span className="text-[11px] text-[#858B92]">{doc.department}</span>
+                        <span className="font-medium text-stone-800 block">{doc.specialization}</span>
+                        <span className="text-[11px] text-stone-400">{doc.department}</span>
                       </td>
 
-                      {/* Experience */}
-                      <td className="py-3 px-4 text-[#F1F2F3] font-mono">
+                      <td className="py-3 px-4 text-stone-800 font-mono">
                         {doc.experience} years
                       </td>
 
-                      {/* Status */}
                       <td className="py-3 px-4">
                         {doc.status === 0 ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-[rgba(211,214,218,0.10)] text-[#F1F2F3] border border-[rgba(255,255,255,0.18)]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#68D391] animate-pulse" />
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                             Available
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-[rgba(237,239,242,0.16)] text-[#FFFFFF] border border-[rgba(255,255,255,0.25)]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#E2E8F0]" />
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-100">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                             Attending
                           </span>
                         )}
                       </td>
 
-                      {/* Current Patient */}
                       <td className="py-3 px-4">
                         {assignedP ? (
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-[#F1F2F3]">{assignedP.name}</span>
+                            <span className="font-medium text-stone-800">{assignedP.name}</span>
                             <span
-                              className={`text-[10px] font-bold px-1.5 py-0.2 rounded-md ${
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                                 assignedP.priority === 1
-                                  ? 'bg-[rgba(240,93,105,0.20)] text-[#F05D69]'
-                                  : 'bg-[rgba(233,174,88,0.20)] text-[#E9AE58]'
+                                  ? 'bg-rose-100 text-rose-700'
+                                  : 'bg-amber-100 text-amber-700'
                               }`}
                             >
                               P{assignedP.priority}
                             </span>
                           </div>
                         ) : (
-                          <span className="text-[#858B92] italic">None</span>
+                          <span className="text-stone-400 italic">None</span>
                         )}
                       </td>
 
-                      {/* Cases Treated */}
-                      <td className="py-3 px-4 font-mono text-[#858B92]">
+                      <td className="py-3 px-4 font-mono text-stone-500">
                         {doc.patients_treated_count}
                       </td>
 
-                      {/* Actions */}
                       <td className="py-3 px-4 text-right">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedDoctor(doc);
                           }}
-                          className="px-3 py-1 rounded-lg text-xs font-medium bg-[rgba(211,214,218,0.10)] hover:bg-[rgba(211,214,218,0.18)] text-[#F1F2F3] border border-[rgba(230,233,237,0.15)] transition cursor-pointer"
+                          className="px-3 py-1 rounded-full text-xs font-semibold bg-stone-100 hover:bg-stone-200 text-stone-800 transition cursor-pointer"
                         >
                           View Profile
                         </button>
@@ -499,27 +468,5 @@ export function DoctorsTab({
         onSelectPatient={onSelectPatient}
       />
     </div>
-  );
-}
-
-function UsersIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
   );
 }
