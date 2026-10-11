@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  medsync:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: medsync_command_center
+    ipc: host # Grants access to host IPC or container IPC namespace for System V objects
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    environment:
+      - PORT=3000
+    restart: unless-stopped

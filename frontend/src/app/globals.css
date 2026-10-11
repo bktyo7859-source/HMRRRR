@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+:root {
+  /* Strict Two-Shade Grey Glassmorphism Design Tokens */
+  --bg-base: #101113;
+  --bg-deep: #191B1E;
+
+  /* Glass Shade B — Dark Smoke (Panels, shell, sidebar, header, tables) */
+  --glass-dark: rgba(38, 40, 43, 0.66);
+  --glass-dark-elevated: rgba(53, 55, 58, 0.54);
+  --glass-dark-card: rgba(32, 34, 37, 0.72);
+  --glass-dark-subtle: rgba(26, 28, 30, 0.60);
+
+  /* Glass Shade A — Light Smoke (Highlights, selected controls, foreground layers) */
+  --glass-light: rgba(211, 214, 218, 0.12);
+  --glass-light-highlight: rgba(237, 239, 242, 0.16);
+  --glass-light-interactive: rgba(220, 224, 230, 0.18);
+  --glass-light-chip: rgba(211, 214, 218, 0.08);
+
+  /* Borders & Dividers */
+  --glass-border: rgba(230, 233, 237, 0.15);
+  --glass-border-highlight: rgba(255, 255, 255, 0.24);
+  --glass-border-subtle: rgba(255, 255, 255, 0.09);
+  --glass-divider: rgba(255, 255, 255, 0.09);
+
+  /* Monochromatic Grey Typography */
+  --text-primary: #F1F2F3;
+  --text-secondary: #B7BBC0;
+  --text-muted: #858B92;
+
+  /* Operational Status Indicators ONLY (Functional meaning, not themes) */
+  --status-critical: #F05D69;
+  --status-critical-bg: rgba(240, 93, 105, 0.15);
+  --status-critical-border: rgba(240, 93, 105, 0.35);
+
+  --status-warning: #E9AE58;
+  --status-warning-bg: rgba(233, 174, 88, 0.15);
+  --status-warning-border: rgba(233, 174, 88, 0.35);
+
+  --status-normal: #A6ADB6;
+  --status-normal-bg: rgba(166, 173, 182, 0.12);
+  --status-normal-border: rgba(166, 173, 182, 0.25);
+
+  /* Shadows & Inner Reflections */
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+  --glass-shadow-sm: 0 4px 16px 0 rgba(0, 0, 0, 0.35);
+  --glass-shadow-lg: 0 16px 48px 0 rgba(0, 0, 0, 0.55);
+  --glass-inner-glow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+h1, h2, h3, .metric-font {
+  font-family: var(--font-space), sans-serif;
+}
+
+code, pre, .mono-font {
+  font-family: var(--font-mono), monospace;
+}
+
+/* Ambient Neutral Lighting Support */
+.ambient-bg-mesh {
+  background-color: #101113;
+  background-image: 
+    radial-gradient(ellipse 90% 45% at 50% -10%, rgba(180, 185, 195, 0.08), transparent 70%),
+    radial-gradient(circle 600px at 15% 40%, rgba(100, 105, 115, 0.05), transparent 80%),
+    radial-gradient(circle 500px at 85% 70%, rgba(120, 125, 135, 0.04), transparent 75%);
+  background-attachment: fixed;
+}
+
+/* Glassmorphism System Classes */
+
+/* Glass Shade B — Dark Smoke Panels */
+.glass-panel-dark {
+  background: rgba(38, 40, 43, 0.66);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(230, 233, 237, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.42), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-dark-elevated {
+  background: rgba(53, 55, 58, 0.54);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.48), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Glass Shade A — Light Smoke Surfaces & Foreground Layers */
+.glass-panel-light {
+  background: rgba(211, 214, 218, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(230, 233, 237, 0.15);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
+}
+
+.glass-panel-light-highlight {
+  background: rgba(237, 239, 242, 0.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.32), inset 0 1px 0 0 rgba(255, 255, 255, 0.20);
+}
+
+/* Interactive Controls (Buttons, Inputs, Toggles) */
+.glass-btn {
+  background: rgba(211, 214, 218, 0.10);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(230, 233, 237, 0.15);
+  color: #F1F2F3;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-btn:hover {
+  background: rgba(237, 239, 242, 0.18);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+}
+
+.glass-btn:active {
+  transform: scale(0.98);
+  background: rgba(211, 214, 218, 0.14);
+}
+
+.glass-btn-active {
+  background: rgba(237, 239, 242, 0.22);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+}
+
+.glass-input {
+  background: rgba(26, 28, 30, 0.70);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(230, 233, 237, 0.15);
+  color: #F1F2F3;
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.38);
+  background: rgba(35, 38, 42, 0.85);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24);
+}
+
+.glass-input::placeholder {
+  color: #858B92;
+}
+
+/* Smoked Glass Chips & Badges */
+.glass-chip-light {
+  background: rgba(211, 214, 218, 0.10);
+  border: 1px solid rgba(230, 233, 237, 0.15);
+  color: #F1F2F3;
+}
+
+.glass-chip-dark {
+  background: rgba(38, 40, 43, 0.60);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #B7BBC0;
+}
+
+/* Overlays and Drawers */
+.glass-drawer {
+  background: rgba(26, 28, 31, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: -16px 0 48px rgba(0, 0, 0, 0.65);
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(18px)) {
+  .glass-panel-dark {
+    background: #181A1D;
+  }
+  .glass-panel-light {
+    background: #25282D;
+  }
+  .glass-drawer {
+    background: #15171A;
+  }
+}
+
+/* Monochromatic Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(16, 17, 19, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(230, 233, 237, 0.18);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
